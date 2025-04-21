@@ -2,9 +2,9 @@
   "python.testing.unittestArgs": [
     "-v",
     "-s",
-    "./C_1/__tests__", // Specify the test directory explicitly
+    ".", // Specify the test directory explicitly
     "-p",
-    "*_test.py" // Match the specific test file pattern
+    "**/*_test.py" // Match the specific test file pattern
   ],
   "python.testing.pytestEnabled": false,
   "python.testing.unittestEnabled": true
