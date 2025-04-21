@@ -18,7 +18,7 @@ def maximumPairwiseProduct(arr,n):
     
     return max_product
 
-def maximumPairwiseProductFast(arr,n):
+def maximumPairwiseProductFast(arr: list,n: int) -> int:
     """
     This function takes a list of integers and returns the maximum pairwise product using a more efficient approach.
     
