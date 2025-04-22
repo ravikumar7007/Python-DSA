@@ -12,6 +12,8 @@ def fibonacci_modulo(n, m):
     pisano_value = pisano_period(m)
     n = n % pisano_value
     prev, curr = 0, 1
+    if n <= 1:
+        return n
     for _ in range(n - 1):
         prev, curr = curr, (prev + curr) % m
     return curr
