@@ -7,10 +7,10 @@ def pisano_period(m):
 
 
 def last_digit_of_fibonacci(n, m):
-    if n <= 1:
-        return n
     pisano_value = pisano_period(m)
     n = n % pisano_value
+    if n <= 1:
+        return n
     prev, curr = 0, 1
     for _ in range(2, n+1):
         prev, curr = curr, prev + curr
