@@ -4,7 +4,7 @@ def lastDigitFibonacciSum(n):
     prev, curr = 0, 1
     sum = prev+curr
     for _ in range(2, n+1):
-        prev, curr = curr, (prev+curr)
+        prev, curr = curr, (prev+curr) % 10
         sum += curr
     return sum % 10
 
