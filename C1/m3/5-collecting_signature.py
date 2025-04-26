@@ -20,4 +20,4 @@ if __name__ == "__main__":
         segments[i] = segment
     len, points = collecting_signature(segments)
     print(len)
-    print(points)
+    print(*points)
