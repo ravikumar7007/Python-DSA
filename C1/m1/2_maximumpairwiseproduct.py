@@ -1,13 +1,13 @@
-import random
+# import random
 
 
 def maximumPairwiseProduct(arr, n):
     """
     This function takes a list of integers and returns the maximum pairwise product.
-
     :param arr: List of integers
     :return: Maximum pairwise product
     """
+
     max_product = 0
     n = len(arr)
 
