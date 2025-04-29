@@ -6,6 +6,9 @@
     "-p",
     "**/*_test.py" // Match the specific test file pattern
   ],
-  "python.testing.pytestEnabled": false,
-  "python.testing.unittestEnabled": true
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestArgs": [
+    "."
+  ]
 }
