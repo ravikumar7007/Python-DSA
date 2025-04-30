@@ -1,23 +1,20 @@
 def merge(A, B):
-    c = [0] * (len(A) + len(B))
+    c = []
     i, j = 0, 0
     inv_count = 0
+
     while i < len(A) and j < len(B):
         if A[i] <= B[j]:
-            c[i + j] = A[i]
+            c.append(A[i])
             i += 1
         else:
-            c[i + j] = B[j]
+            c.append(B[j])
             inv_count += len(A) - i  # Count inversions
             j += 1
 
-    while i < len(A):
-        c[i + j] = A[i]
-        i += 1
-
-    while j < len(B):
-        c[i + j] = B[j]
-        j += 1
+    # Append remaining elements from both subarrays
+    c.extend(A[i:])
+    c.extend(B[j:])
 
     return c, inv_count
 
@@ -39,7 +36,7 @@ def count_inversions(arr):
     return inv_count
 
 
-# Example usage
-arr = [2, 3, 9, 2, 9]
-result = count_inversions(arr)
-print(result)  # Output: 2
+if __name__ == "__main__":
+    n = int(input())
+    arr = list(map(int, input().split()))
+    print(count_inversions(arr))
