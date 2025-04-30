@@ -17,24 +17,27 @@ def count_segments(segments, points):
     events = []
     results = [0] * len(points)
 
+    # Add segment start and end events
     for l, r in segments:
-        events.append((l, 1))
-        events.append((r, -1))
+        events.append((l, 1))  # Start of a segment
+        events.append((r, -1))  # End of a segment
 
+    # Add point events with their original index
     for i, p in enumerate(points):
-        events.append((p, 0, i))
+        events.append((p, 0, i))  # Point event
 
-    # events = quick_sort(events, 0, len(events) - 1)
-    events.sort(key=lambda x: (x[0], x[1]))  # Sort by first element, then by second
+    # Sort events by x-coordinate, then by type (1 > 0 > -1)
+    events.sort(key=lambda x: (x[0], x[1]))
 
     count = 0
 
+    # Process events
     for event in events:
-        if event[1] == 1:
+        if event[1] == 1:  # Start of a segment
             count += 1
-        elif event[1] == -1:
+        elif event[1] == -1:  # End of a segment
             count -= 1
-        else:
+        else:  # Point event
             results[event[2]] = count
 
     return results
