@@ -1,16 +1,16 @@
-import random
+# import random
 
 
-def quick_sort(arr, low, high):
-    if len(arr) <= 1:
-        return arr
-    pi = random.randint(low, high)
-    less = [el for el in arr if el[0] < arr[pi][0]]
-    equal = [el for el in arr if el[0] == arr[pi][0]]
-    more = [el for el in arr if el[0] > arr[pi][0]]
-    return (
-        quick_sort(less, 0, len(less) - 1) + equal + quick_sort(more, 0, len(more) - 1)
-    )
+# def quick_sort(arr, low, high):
+#     if len(arr) <= 1:
+#         return arr
+#     pi = random.randint(low, high)
+#     less = [el for el in arr if el[0] < arr[pi][0]]
+#     equal = [el for el in arr if el[0] == arr[pi][0]]
+#     more = [el for el in arr if el[0] > arr[pi][0]]
+#     return (
+#         quick_sort(less, 0, len(less) - 1) + equal + quick_sort(more, 0, len(more) - 1)
+#     )
 
 
 def count_segments(segments, points):
@@ -24,7 +24,8 @@ def count_segments(segments, points):
     for i, p in enumerate(points):
         events.append((p, 0, i))
 
-    events = quick_sort(events, 0, len(events) - 1)
+    # events = quick_sort(events, 0, len(events) - 1)
+    events.sort(key=lambda x: (x[0], x[1]))  # Sort by first element, then by second
 
     count = 0
 
