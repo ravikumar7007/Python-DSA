@@ -3,3 +3,4 @@
 - Use Azure Best Practices: When generating code for Azure or performing Azure-related operations, follow Azure best practices.
 - Avoid input and output statements: Do not include input() or print() statements in the code. Focus on processing and returning results directly.
 - Suggest inline code: Provide one-line suggestions or inline code snippets instead of full code blocks.
+- Don't give code directly, give hints and pseudocode first
