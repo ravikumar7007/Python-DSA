@@ -1,22 +1,20 @@
-def findEvenNumbers(digits):
-    freq = [0] * 10
-    res = []
-    for num in digits:
-        freq[num] += 1
-    for num in range(100, 999, 2):
-        parts = [num // 100, (num // 10) % 10, num % 10]
-        local = [0] * 10
-        for loc in parts:
-            local[loc] += 1
-        valid = True
-        for d in set(parts):
-            if local[d] > freq[d]:
-                valid = False
-                break
-        if valid:
-            res.append(num)
-    return res
+def searchMatrix(matrix, target: int) -> bool:
+    l = 0
+    n = len(matrix[0])
+    r = len(matrix) * n - 1
+    while l <= r:
+        mid = (l + r) // 2
+        x = mid // n
+        y = mid % n
+        if matrix[x][y] == target:
+            return True
+        elif matrix[x][y] > target:
+            r = mid - 1
+        else:
+            l = mid + 1
+    return False
 
 
-print(findEvenNumbers([2, 1, 3, 0]))
-# Output: [120, 102, 210, 201, 320, 302, 320, 321]
+# Example usage
+matrix = [[1, 1]]
+print(searchMatrix(matrix, 2))  # Output: True
