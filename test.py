@@ -1,20 +1,20 @@
-def searchMatrix(matrix, target: int) -> bool:
-    l = 0
-    n = len(matrix[0])
-    r = len(matrix) * n - 1
-    while l <= r:
-        mid = (l + r) // 2
-        x = mid // n
-        y = mid % n
-        if matrix[x][y] == target:
-            return True
-        elif matrix[x][y] > target:
-            r = mid - 1
-        else:
-            l = mid + 1
-    return False
+def lengthAfterTransformations(s: str, t: int) -> int:
+    MOD = 10**9 + 7
+    freq = [0] * 26
+    for ch in s:
+        freq[ord(ch) - ord("a")] += 1
+
+    for _ in range(t):
+        new_freq = [0] * 26
+        for i in range(25):  # 'a' to 'y'
+            new_freq[i + 1] = freq[i]
+        # Special case: 'z' → 'a' + 'b'
+        new_freq[0] = (new_freq[0] + freq[25]) % MOD
+        new_freq[1] = (new_freq[1] + freq[25]) % MOD
+        freq = new_freq
+
+    return sum(freq) % MOD
 
 
-# Example usage
-matrix = [[1, 1]]
-print(searchMatrix(matrix, 2))  # Output: True
+
+print(lengthAfterTransformations(s="abcyy", t=2))  # Output: 6
