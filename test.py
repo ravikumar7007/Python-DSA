@@ -1,50 +1,49 @@
+import heapq
 from typing import List
 
 
 class Solution:
-    def setZeroes(self, matrix: List[List[int]]) -> None:
-        m, n = len(matrix), len(matrix[0])
-        first_row_zero = False
-        first_col_zero = False
+    def maxRemoval(self, nums: List[int], queries: List[List[int]]) -> int:
+        n = len(nums)
+        lenq = len(queries)
+        available_query = []
+        used_query = []
+        queries.sort(key=lambda x: x[0])
+        query_pos = 0
+        applied_count = 0
+        used_count = 0
 
-        # Check if first row needs to be zeroed
-        for j in range(n):
-            if matrix[0][j] == 0:
-                first_row_zero = True
-                break
+        for i in range(n):
+            # Add all queries starting at i
+            while query_pos < lenq and queries[query_pos][0] == i:
+                heapq.heappush(available_query, -queries[query_pos][1])
+                query_pos += 1
 
-        # Check if first column needs to be zeroed
-        for i in range(m):
-            if matrix[i][0] == 0:
-                first_col_zero = True
-                break
+            # Remove expired used queries
+            while used_query and used_query[0] == i - 1:
+                heapq.heappop(used_query)
+                used_count -= 1
 
-        # Use first row and column to mark zero rows and columns
-        for i in range(1, m):
-            for j in range(1, n):
-                if matrix[i][j] == 0:
-                    matrix[i][0] = 0
-                    matrix[0][j] = 0
+            need = nums[i] - used_count
 
-        # Set cells to zero based on markers in first row/column
-        for i in range(1, m):
-            for j in range(1, n):
-                if matrix[i][0] == 0 or matrix[0][j] == 0:
-                    matrix[i][j] = 0
+            # Apply available queries to meet the need
+            while need > 0 and available_query and -available_query[0] >= i:
+                end = -heapq.heappop(available_query)
+                heapq.heappush(used_query, end)
+                used_count += 1
+                applied_count += 1
+                need -= 1
 
-        # Zero first row if needed
-        if first_row_zero:
-            for j in range(n):
-                matrix[0][j] = 0
+            if need > 0:
+                return -1
 
-        # Zero first column if needed
-        if first_col_zero:
-            for i in range(m):
-                matrix[i][0] = 0
+        return lenq - applied_count
 
 
 # Example usage
 if __name__ == "__main__":
-    matrix = [[1, 0, 3]]
-    Solution().setZeroes(matrix)
-    print(matrix)
+    nums = [2, 0, 2]
+    queries = [[0, 2], [0, 2], [1, 1]]
+    solution = Solution()
+    result = solution.maxRemoval(nums, queries)
+    print(result)  # Output: [3, 2, 1]
