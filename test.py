@@ -1,55 +1,56 @@
+from collections import deque
+from threading import stack_size
 from typing import List
 
 
 class Solution:
-    def dfs(
-        self,
-        curr: int,
-        graph: List[List[int]],
-        colors: str,
-        longest_path: List[List[int]],
-        visited: List[int],
-    ) -> int:
-        if visited[curr] == 1:
-            return float("inf")
-        if visited[curr] == 0:
-            visited[curr] = 1
-            for val in graph[curr]:
-                res = self.dfs(val, graph, colors, longest_path, visited)
-                if res == float("inf"):
-                    return float("inf")
+    def bfs(self, node: int, graph: List[List[int]], k: int) -> int:
+        q = deque()
+        q.append((node, -1))
+        count = 0
 
-                for i in range(26):
-                    longest_path[i][curr] = max(
-                        longest_path[i][curr], longest_path[i][val]
-                    )
-            # order of 'a' is 97 in ASCII
-            longest_path[ord(colors[curr]) - 97][curr] += 1
+        while q and k >= 0:
+            size = len(q)
+            count += size
+            for _ in range(size):
+                current, parent = q.popleft()
+                for neighbor in graph[current]:
+                    if neighbor != parent:
+                        q.append((neighbor, current))
 
-            visited[curr] = 2
-        return longest_path[ord(colors[curr]) - 97][curr]
+            k -= 1
+        return count
 
-    def largestPathValue(self, colors: str, edges: List[List[int]]) -> int:
-        n = len(colors)
+    def build_graph(self, edges: List[List[int]], n: int) -> List[List[int]]:
         graph = [[] for _ in range(n)]
-        for edge in edges:
-            graph[edge[0]].append(edge[1])
+        for u, v in edges:
+            graph[u].append(v)
+            graph[v].append(u)
+        return graph
 
-        longest_path = [[0] * n for _ in range(26)]
-        max_color_len = 0
-        visited = [0] * n
+    def maxTargetNodes(
+        self, edges1: List[List[int]], edges2: List[List[int]], k: int
+    ) -> List[int]:
+        m = len(edges1) + 1
+        n = len(edges2) + 1
 
-        for i in range(n):
-            res = self.dfs(i, graph, colors, longest_path, visited)
-            if res == float("inf"):
-                return -1
-            max_color_len = max(max_color_len, res)
-        return max_color_len
+        graph1 = self.build_graph(edges1, m)
+        graph2 = self.build_graph(edges2, n)
+
+        # Precompute all bfs results for graph2 to avoid repeated work
+        bfs_graph2 = [self.bfs(i, graph2, k - 1) for i in range(n)]
+        best = max(bfs_graph2)
+
+        # Precompute all bfs results for graph1
+        bfs_graph1 = [self.bfs(i, graph1, k) for i in range(m)]
+
+        # Combine results
+        return [x + best for x in bfs_graph1]
 
 
 if __name__ == "__main__":
-    colors = "abaca"
-    edges = [[0, 1], [0, 2], [2, 3], [3, 4]]
+    edges1 = [[0, 1]]
+    edges2 = [[0, 1]]
+    k = 0
     solution = Solution()
-    result = solution.largestPathValue(colors, edges)
-    print(result)  # Expected output: 3
+    print(solution.maxTargetNodes(edges1, edges2, k))  # Example usage

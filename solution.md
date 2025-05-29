@@ -1,18 +1,35 @@
 # Title
-Find Indices of Words Containing a Given Character
+Difference Between Sum of Numbers and Twice the Sum of Multiples
 
 # Tags
-Array, String, List Comprehension, Python
+math, arithmetic progression, python, algorithm, constant time
 
 # Intuition
-The problem asks for the indices of all words in a list that contain a specific character. My first thought was to iterate through the list, check if the character exists in each word, and collect the indices where it does.
+
+To find the difference between the sum of all numbers from 1 to n and twice the sum of all multiples of m up to n, we can use mathematical formulas instead of iterating through each number.
 
 # Approach
-Iterate through the list of words using their indices. For each word, check if the given character is present. If it is, append the index to the result list. This can be efficiently done using a list comprehension with `enumerate` for cleaner code.
+
+- Calculate the sum of all numbers from 1 to n using the arithmetic progression formula: `n * (n + 1) // 2`.
+- Calculate the sum of all multiples of m up to n using the formula for the sum of the first k natural numbers, where k is the number of multiples: `m * count * (count + 1) // 2`, with `count = n // m`.
+- Return the difference: total sum minus twice the multiples sum.
 
 # Complexity
+
 - Time complexity:  
-  $$O(n \cdot m)$$, where \( n \) is the number of words and \( m \) is the average length of each word (since `in` checks each character in the word).
+  $$O(1)$$ (All calculations are done in constant time using formulas.)
 
 - Space complexity:  
-  $$O(k)$$, where \( k \) is the number of words containing the character (for the result list).
+  $$O(1)$$ (Only a constant amount of extra space is used.)
+
+# Code
+
+```python3 []
+class Solution:
+    def differenceOfSums(self, n: int, m: int) -> int:
+        total_sum = n * (n + 1) // 2
+        # Sum of multiples of m up to n using arithmetic progression formula
+        count = n // m
+        multiples_sum = m * count * (count + 1) // 2
+        return total_sum - 2 * multiples_sum
+```
