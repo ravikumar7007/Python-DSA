@@ -3,59 +3,33 @@ from typing import List
 
 
 class Solution:
-    def bfs(
-        self, node: int, graph: List[List[int]], mark_even: List[bool] = None
-    ) -> int:
-        q = deque([(node, -1)])
-        count = 0
-        level = 0
+    def closestMeetingNode(self, edges: List[int], node1: int, node2: int) -> int:
+        def get_distances(start: int) -> List[int]:
+            dist = [-1] * len(edges)
+            curr, d = start, 0
+            while curr != -1 and dist[curr] == -1:
+                dist[curr] = d
+                curr = edges[curr]
+                d += 1
+            return dist
 
-        while q:
-            if level % 2 == 0:
-                count += len(q)
-                if mark_even is not None:
-                    for current, _ in q:
-                        mark_even[current] = True
-            for _ in range(len(q)):
-                current, parent = q.popleft()
-                for neighbor in graph[current]:
-                    if neighbor != parent:
-                        q.append((neighbor, current))
-            level += 1
-        return count
+        dist1 = get_distances(node1)
+        dist2 = get_distances(node2)
 
-    def build_graph(self, edges: List[List[int]], n: int) -> List[List[int]]:
-        graph = [[] for _ in range(n)]
-        for u, v in edges:
-            graph[u].append(v)
-            graph[v].append(u)
-        return graph
-
-    def maxTargetNodes(
-        self, edges1: List[List[int]], edges2: List[List[int]]
-    ) -> List[int]:
-        m = len(edges1) + 1
-        n = len(edges2) + 1
-
-        graph1 = self.build_graph(edges1, m)
-        graph2 = self.build_graph(edges2, n)
-
-        # Calculate best1 in one pass
-        even_count1 = self.bfs(0, graph2)
-        best1 = max(even_count1, n - even_count1)
-
-        included = [False] * m
-        even_count2 = self.bfs(0, graph1, included)
-        odd_count2 = m - even_count2
-
-        # Use list comprehension for result
-        return [
-            even_count2 + best1 if included[i] else odd_count2 + best1 for i in range(m)
-        ]
+        min_dist = float("inf")
+        result = -1
+        for i, (d1, d2) in enumerate(zip(dist1, dist2)):
+            if d1 != -1 and d2 != -1:
+                max_d = max(d1, d2)
+                if max_d < min_dist:
+                    min_dist = max_d
+                    result = i
+        return result
 
 
 if __name__ == "__main__":
-    edges1 = [[0, 1], [0, 2], [0, 3], [0, 4]]
-    edges2 = [[0, 1], [1, 2], [2, 3]]
+    edges = [2, 2, 3, -1]
+    node1 = 0
+    node2 = 1
     solution = Solution()
-    print(solution.maxTargetNodes(edges1, edges2))  # Example usage
+    print(solution.closestMeetingNode(edges, node1, node2))  # Output: 2
