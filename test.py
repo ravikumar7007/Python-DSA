@@ -3,33 +3,41 @@ from typing import List
 
 
 class Solution:
-    def closestMeetingNode(self, edges: List[int], node1: int, node2: int) -> int:
-        def get_distances(start: int) -> List[int]:
-            dist = [-1] * len(edges)
-            curr, d = start, 0
-            while curr != -1 and dist[curr] == -1:
-                dist[curr] = d
-                curr = edges[curr]
-                d += 1
-            return dist
+    def snakesAndLadders(self, board: List[List[int]]) -> int:
+        n = len(board)
+        MAX = n * n
+        q = deque([1])  # Start from square 1
+        visited = [False] * (MAX + 1)
+        visited[1] = True
 
-        dist1 = get_distances(node1)
-        dist2 = get_distances(node2)
+        level = 0
+        while q:
+            size = len(q)
+            for _ in range(size):
+                curr = q.popleft()
+                if curr == MAX:
+                    return level
 
-        min_dist = float("inf")
-        result = -1
-        for i, (d1, d2) in enumerate(zip(dist1, dist2)):
-            if d1 != -1 and d2 != -1:
-                max_d = max(d1, d2)
-                if max_d < min_dist:
-                    min_dist = max_d
-                    result = i
-        return result
+                for next_pst in range(curr + 1, min(curr + 6, MAX) + 1):
+                    dest = next_pst
+
+                    row = (next_pst - 1) // n
+                    col = (next_pst - 1) % n
+                    if row % 2 == 1:
+                        col = n - 1 - col
+                    row = n - 1 - row
+
+                    if board[row][col] != -1:
+                        dest = board[row][col]
+
+                    if not visited[dest]:
+                        visited[dest] = True
+                        q.append(dest)
+            level += 1
+        return -1
 
 
 if __name__ == "__main__":
-    edges = [2, 2, 3, -1]
-    node1 = 0
-    node2 = 1
-    solution = Solution()
-    print(solution.closestMeetingNode(edges, node1, node2))  # Output: 2
+    sol = Solution()
+    board = [[-1, -1], [-1, 3]]
+    print(sol.snakesAndLadders(board))  # Output: 4
