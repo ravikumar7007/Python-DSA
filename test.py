@@ -1,43 +1,33 @@
-from collections import deque
 from typing import List
 
 
 class Solution:
-    def snakesAndLadders(self, board: List[List[int]]) -> int:
-        n = len(board)
-        MAX = n * n
-        q = deque([1])  # Start from square 1
-        visited = [False] * (MAX + 1)
-        visited[1] = True
-
-        level = 0
-        while q:
-            size = len(q)
-            for _ in range(size):
-                curr = q.popleft()
-                if curr == MAX:
-                    return level
-
-                for next_pst in range(curr + 1, min(curr + 6, MAX) + 1):
-                    dest = next_pst
-
-                    row = (next_pst - 1) // n
-                    col = (next_pst - 1) % n
-                    if row % 2 == 1:
-                        col = n - 1 - col
-                    row = n - 1 - row
-
-                    if board[row][col] != -1:
-                        dest = board[row][col]
-
-                    if not visited[dest]:
-                        visited[dest] = True
-                        q.append(dest)
-            level += 1
-        return -1
+    def candy(self, ratings: List[int]) -> int:
+        n = len(ratings)
+        if n == 0:
+            return 0
+        res = [1] * n
+        # Forward pass
+        for i in range(1, n):
+            if ratings[i] > ratings[i - 1]:
+                res[i] = res[i - 1] + 1
+        # Backward pass
+        total = res[-1]
+        for i in range(n - 2, -1, -1):
+            if ratings[i] > ratings[i + 1] and res[i] <= res[i + 1]:
+                res[i] = res[i + 1] + 1
+            total += res[i]
+        return total
 
 
 if __name__ == "__main__":
-    sol = Solution()
-    board = [[-1, -1], [-1, 3]]
-    print(sol.snakesAndLadders(board))  # Output: 4
+    ratings = [1, 2, 87, 87, 87, 2, 1]
+    solution = Solution()
+    print(solution.candy(ratings))  # Output: 13
+    ratings = [1, 0, 2]
+    solution = Solution()
+    print(solution.candy(ratings))  # Output: 5
+    ratings = [1, 2, 2]
+    print(solution.candy(ratings))  # Output: 4
+    ratings = [1, 3, 2, 2, 1]
+    print(solution.candy(ratings))  # Output: 9
