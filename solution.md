@@ -1,35 +1,37 @@
 # Title
-Difference Between Sum of Numbers and Twice the Sum of Multiples
-
-# Tags
-math, arithmetic progression, python, algorithm, constant time
+Remove Characters Marked by Stars
 
 # Intuition
-
-To find the difference between the sum of all numbers from 1 to n and twice the sum of all multiples of m up to n, we can use mathematical formulas instead of iterating through each number.
+When encountering a `*` in the string, we need to remove the smallest lexicographical character to its left that hasn't already been removed. My first thought was to keep track of the positions of each character so we can efficiently find and remove the correct one when a `*` is found.
 
 # Approach
-
-- Calculate the sum of all numbers from 1 to n using the arithmetic progression formula: `n * (n + 1) // 2`.
-- Calculate the sum of all multiples of m up to n using the formula for the sum of the first k natural numbers, where k is the number of multiples: `m * count * (count + 1) // 2`, with `count = n // m`.
-- Return the difference: total sum minus twice the multiples sum.
+- Convert the string to a list for mutability.
+- Use an array of stacks (`list_s`) to store the indices of each character (`a` to `z`) as we iterate.
+- When a `*` is found, scan from `a` to `z` and pop the most recent index from the first non-empty stack, marking that character as removed.
+- After processing, join and return all characters that are not `*`.
 
 # Complexity
-
 - Time complexity:  
-  $$O(1)$$ (All calculations are done in constant time using formulas.)
-
+  $$O(26n)$$ (for each `*`, in the worst case, we may scan up to 26 stacks, but in practice this is very fast and close to $$O(n)$$)
 - Space complexity:  
-  $$O(1)$$ (Only a constant amount of extra space is used.)
+  $$O(n)$$ (for the stacks and the mutable string list)
 
 # Code
-
 ```python3 []
 class Solution:
-    def differenceOfSums(self, n: int, m: int) -> int:
-        total_sum = n * (n + 1) // 2
-        # Sum of multiples of m up to n using arithmetic progression formula
-        count = n // m
-        multiples_sum = m * count * (count + 1) // 2
-        return total_sum - 2 * multiples_sum
+    def clearStars(self, s: str) -> str:
+        n = len(s)
+        s = list(s)
+        list_s = [[] for _ in range(26)]
+        for i in range(n):
+            ch = s[i]
+            if ch == "*":
+                for j in range(26):
+                    if list_s[j]:
+                        s[list_s[j].pop()] = "*"
+                        break
+            else:
+                list_s[ord(ch) - 97].append(i)
+
+        return "".join(c for c in s if c != "*")
 ```
