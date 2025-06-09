@@ -20,7 +20,7 @@ class Solution:
 
 if __name__ == "__main__":
     sol = Solution()
-    n = 13
+    n = 10000
     print(sol.lexicalOrder(n))  # Output: [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9]
     n = 20
     print(
