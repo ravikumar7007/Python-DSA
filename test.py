@@ -1,28 +1,36 @@
-from typing import List
-
-
 class Solution:
-    def lexicalOrder(self, n: int) -> List[int]:
-        res = []
+    def step_count(self, n: int, curr: int, next: int) -> int:
+        steps = 0
+        while curr <= n:
+            steps += min(n + 1, next) - curr
+            curr *= 10
+            next *= 10
+        return steps
+
+    def findKthNumber(self, n: int, k: int) -> int:
         curr = 1
+        k -= 1  # Adjust k to be zero-indexed
 
-        for _ in range(n):
-            res.append(curr)
-            if curr * 10 <= n:
-                curr *= 10
-            else:
-                while curr % 10 == 9 or curr + 1 > n:
-                    curr //= 10
+        while k > 0:
+            steps = self.step_count(n, curr, curr + 1)
+            if steps <= k:
                 curr += 1
+                k -= steps
+            else:
+                curr *= 10
+                k -= 1
 
-        return res
+        return curr
 
 
 if __name__ == "__main__":
     sol = Solution()
-    n = 10000
-    print(sol.lexicalOrder(n))  # Output: [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9]
-    n = 20
-    print(
-        sol.lexicalOrder(n)
-    )  # Output: [1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 2, 20, 3, 4, 5, 6, 7, 8, 9]
+    n = 13
+    k = 2
+    print(sol.findKthNumber(n, k))  # Output: 10
+    n = 1
+    k = 1
+    print(sol.findKthNumber(n, k))  # Output: 1
+    n = 1000
+    k = 10
+    print(sol.findKthNumber(n, k))  # Output: 10
