@@ -1,37 +1,36 @@
 # Title
-Remove Characters Marked by Stars
+Maximum Difference Between Odd and Even Character Frequencies
 
 # Intuition
-When encountering a `*` in the string, we need to remove the smallest lexicographical character to its left that hasn't already been removed. My first thought was to keep track of the positions of each character so we can efficiently find and remove the correct one when a `*` is found.
+The problem asks for the difference between the highest odd frequency and the lowest even frequency of characters in a string. My first thought was to count the frequency of each character and then separate them into odd and even counts to find the required values.
 
 # Approach
-- Convert the string to a list for mutability.
-- Use an array of stacks (`list_s`) to store the indices of each character (`a` to `z`) as we iterate.
-- When a `*` is found, scan from `a` to `z` and pop the most recent index from the first non-empty stack, marking that character as removed.
-- After processing, join and return all characters that are not `*`.
+- Use `Counter` to count the frequency of each character in the string.
+- Iterate through the frequency values:
+  - If the count is odd, update `max_odd` if it's larger.
+  - If the count is even, update `min_even` if it's smaller.
+- Return the difference between `max_odd` and `min_even`.
 
 # Complexity
 - Time complexity:  
-  $$O(26n)$$ (for each `*`, in the worst case, we may scan up to 26 stacks, but in practice this is very fast and close to $$O(n)$$)
+  $$O(n)$$ (where \( n \) is the length of the string, for counting and iterating frequencies)
 - Space complexity:  
-  $$O(n)$$ (for the stacks and the mutable string list)
+  $$O(1)$$ (since there are at most 26 lowercase letters, the space for the counter is constant)
 
 # Code
 ```python3 []
-class Solution:
-    def clearStars(self, s: str) -> str:
-        n = len(s)
-        s = list(s)
-        list_s = [[] for _ in range(26)]
-        for i in range(n):
-            ch = s[i]
-            if ch == "*":
-                for j in range(26):
-                    if list_s[j]:
-                        s[list_s[j].pop()] = "*"
-                        break
-            else:
-                list_s[ord(ch) - 97].append(i)
+from collections import Counter
 
-        return "".join(c for c in s if c != "*")
+class Solution:
+    def maxDifference(self, s: str) -> int:
+        max_odd = 0
+        min_even = float("inf")
+        map_s = Counter(s)
+        for val in map_s.values():
+            if val % 2 != 0:
+                max_odd = max(val, max_odd)
+            else:
+                min_even = min(val, min_even)
+
+        return max_odd - min_even
 ```
