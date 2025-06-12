@@ -1,36 +1,24 @@
 # Title
-Maximum Difference Between Odd and Even Character Frequencies
+Maximum Adjacent Distance in a Circular Array
+
+# Tags
+array, math, absolute difference, sliding window, python
 
 # Intuition
-The problem asks for the difference between the highest odd frequency and the lowest even frequency of characters in a string. My first thought was to count the frequency of each character and then separate them into odd and even counts to find the required values.
+To find the largest difference between any two adjacent elements in the array (including the circular pair between the last and first elements), we can simply check the absolute difference for each adjacent pair.
 
 # Approach
-- Use `Counter` to count the frequency of each character in the string.
-- Iterate through the frequency values:
-  - If the count is odd, update `max_odd` if it's larger.
-  - If the count is even, update `min_even` if it's smaller.
-- Return the difference between `max_odd` and `min_even`.
+Iterate through the array, for each index compute the absolute difference between the current element and the previous one (using negative indexing to wrap around for the circular case). Use a generator expression with `max()` to efficiently find the largest difference.
 
 # Complexity
 - Time complexity:  
-  $$O(n)$$ (where \( n \) is the length of the string, for counting and iterating frequencies)
+  $$O(n)$$ (where \( n \) is the length of the array)
 - Space complexity:  
-  $$O(1)$$ (since there are at most 26 lowercase letters, the space for the counter is constant)
+  $$O(1)$$ (constant extra space)
 
 # Code
 ```python3 []
-from collections import Counter
-
 class Solution:
-    def maxDifference(self, s: str) -> int:
-        max_odd = 0
-        min_even = float("inf")
-        map_s = Counter(s)
-        for val in map_s.values():
-            if val % 2 != 0:
-                max_odd = max(val, max_odd)
-            else:
-                min_even = min(val, min_even)
-
-        return max_odd - min_even
+    def maxAdjacentDistance(self, nums: List[int]) -> int:
+        return max(abs(nums[i] - nums[i - 1]) for i in range(len(nums)))
 ```
