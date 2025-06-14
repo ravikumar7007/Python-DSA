@@ -1,22 +1,38 @@
+import re
 from typing import List
 
 
-# Constraint
-# 2 <= nums.length <= 100
-# -100 <= nums[i] <= 100
+# Constraints:
+# 1 <= num <= 10^8
 class Solution:
-    def maxAdjacentDistance(self, nums: List[int]) -> int:
-        maxDist = float("-inf")
+    def minMaxDifference(self, num: int) -> int:
+        num_arr = list(str(num))
+        num_s = 0
+        for i in range(len(num_arr)):
+            if num_arr[i] != "9":
+                num_s = num_arr[i]
+                break
+        for i in range(len(num_arr)):
+            if num_arr[i] == num_s:
+                num_arr[i] = "9"
 
-        for i in range(len(nums)):
-            dist = abs(nums[i] - nums[i - 1])
-            maxDist = max(maxDist, dist)
+        max_num = int("".join(num_arr))
+        num_arr = list(str(num))
+        num_s = num_arr[0]
+        for j in range(len(num_arr)):
+            if num_arr[j] == num_s:
+                num_arr[j] = "0"
 
-        return maxDist
+        min_num = int("".join(num_arr))
+        return max_num - min_num
 
 
 if __name__ == "__main__":
-    sol = Solution()
-    print(sol.maxAdjacentDistance([1, 3, 6, 10, 15]))  # Example test case
-    print(sol.maxAdjacentDistance([1, 2, 3, 4, 5]))  # Another test case
-    print(sol.maxAdjacentDistance([5, 10, 15, 20]))  # Circular distance check
+    solution = Solution()
+    print(solution.minMaxDifference(11891))
+    print(solution.minMaxDifference(90))  # Example usage
+    print(solution.minMaxDifference(123456789))  # Example usage
+    print(solution.minMaxDifference(10000000))  # Another example
+    print(solution.minMaxDifference(987654321))  # Edge case
+    print(solution.minMaxDifference(0))  # Edge case
+    print(solution.minMaxDifference(9))  # Edge case
