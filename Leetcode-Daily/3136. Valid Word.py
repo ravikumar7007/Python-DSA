@@ -1,20 +1,28 @@
 class Solution:
     def isValid(self, word: str) -> bool:
+        """
+        Checks if the word is valid:
+        - At least 3 characters long
+        - Contains at least one vowel and one consonant
+        - Only contains letters and digits
+        """
         if len(word) < 3:
             return False
 
-        hasVowel = False
-        hasConsonant = False
+        has_vowel = False
+        has_consonant = False
+        vowels = set("aeiou")
 
         for c in word:
             if c.isalpha():
-                if c.lower() in "aeiou":
-                    hasVowel = True
+                if c.lower() in vowels:
+                    has_vowel = True
                 else:
-                    hasConsonant = True
+                    has_consonant = True
             elif not c.isdigit():
                 return False
-        return hasVowel and hasConsonant
+
+        return has_vowel and has_consonant
 
 
 if __name__ == "__main__":
