@@ -7,60 +7,58 @@ class TrieNode:
         self.remove = False
         self.children: Dict[str, TrieNode] = {}
 
-    def add_child(self, folder: str) -> "TrieNode":
-        if folder not in self.children:
-            self.children[folder] = TrieNode(folder)
-        return self.children[folder]
-
 
 class Solution:
     def insert_path(self, root: TrieNode, path: List[str]) -> None:
+        """Insert a folder path into the trie."""
         node = root
         for folder in path:
-            node = node.add_child(folder)
+            if folder not in node.children:
+                node.children[folder] = TrieNode(folder)
+            node = node.children[folder]
 
-    def mark_repeating_subfolders(
-        self, node: TrieNode, visited: Dict[str, TrieNode]
-    ) -> str:
-        subfolders_repr = ""
-        for child in node.children.values():
-            subfolders_repr += self.mark_repeating_subfolders(child, visited)
+    def serialize(self, node: TrieNode, lookup: Dict[str, List[TrieNode]]) -> str:
+        """Serialize the subtree rooted at node and populate lookup for duplicate detection."""
+        if not node.children:
+            return f"[{node.folder}]"
+        subfolders_serial = "".join(
+            self.serialize(node.children[child], lookup)
+            for child in sorted(node.children.keys())
+        )
+        serial = f"[{node.folder}{subfolders_serial}]"
+        lookup.setdefault(subfolders_serial, []).append(node)
+        return serial
 
-        if subfolders_repr:
-            if subfolders_repr in visited:
-                visited[subfolders_repr].remove = True
-                node.remove = True
-            else:
-                visited[subfolders_repr] = node
-
-        return f"[{node.folder}{subfolders_repr}]"
+    def mark_removals(self, lookup: Dict[str, List[TrieNode]]) -> None:
+        """Mark nodes for removal if their subtree serialization appears more than once."""
+        for nodes_with_same_serial in lookup.values():
+            if len(nodes_with_same_serial) > 1:
+                for node in nodes_with_same_serial:
+                    node.remove = True
 
     def collect_paths(
-        self, node: TrieNode, current_path: List[str], result: List[List[str]]
+        self, node: TrieNode, path: List[str], result: List[List[str]]
     ) -> None:
-        if node.remove:
-            return
-
-        current_path.append(node.folder)
-        result.append(current_path.copy())
-
-        for child in node.children.values():
-            self.collect_paths(child, current_path, result)
-
-        current_path.pop()
+        """Collect all valid folder paths from the trie, skipping removed subtrees."""
+        for folder, child in node.children.items():
+            if not child.remove:
+                path.append(folder)
+                result.append(path.copy())
+                self.collect_paths(child, path, result)
+                path.pop()
 
     def deleteDuplicateFolder(self, paths: List[List[str]]) -> List[List[str]]:
-        root = TrieNode("/")
+        """Main method to delete duplicate folders and return remaining paths."""
+        root = TrieNode("")
         for path in paths:
             self.insert_path(root, path)
 
-        visited: Dict[str, TrieNode] = {}
-        self.mark_repeating_subfolders(root, visited)
+        lookup: Dict[str, List[TrieNode]] = {}
+        self.serialize(root, lookup)
+        self.mark_removals(lookup)
 
         result: List[List[str]] = []
-        for child in root.children.values():
-            self.collect_paths(child, [], result)
-
+        self.collect_paths(root, [], result)
         return result
 
 
