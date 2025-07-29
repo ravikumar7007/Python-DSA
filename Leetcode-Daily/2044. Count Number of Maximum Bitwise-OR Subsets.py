@@ -19,7 +19,7 @@ class Solution:
             return include + exclude
 
         return dfs(0, 0)
-    
+
 
 if __name__ == "__main__":
     sol = Solution()
